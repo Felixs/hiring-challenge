@@ -15,7 +15,7 @@ services:
       - ./database:/docker-entrypoint-initdb.d/
 
   ab-test-lambda:
-    build: ./lambda
+    build: .
     depends_on: 
       - postgresql-db
     ports:
