@@ -1,7 +1,10 @@
 import unittest
 
-from src.app import extract_best_ctr_entry_with_margin
-from src.ctr_entry import CtrEntry
+from src.ctr_entry import (
+    CtrEntry,
+    calculate_ctr_margin,
+    extract_best_ctr_entry_with_margin,
+)
 from src.errors import EmptyMessageException
 
 
@@ -26,10 +29,14 @@ class TestApp(unittest.TestCase):
         ctr_entries = [self.high_ctr, self.mid_ctr]
         best_ctr_entry, margin = extract_best_ctr_entry_with_margin(ctr_entries)
         self.assertEqual(best_ctr_entry, self.high_ctr)
-        self.assertAlmostEqual(margin, self.high_ctr.ctr - self.mid_ctr.ctr)
+        self.assertAlmostEqual(
+            margin, calculate_ctr_margin(self.high_ctr, self.mid_ctr)
+        )
 
     def test_extract_best_ctr_entry_with_margin(self):
         ctr_entries = [self.high_ctr, self.mid_ctr, self.low_ctr]
         best_ctr_entry, margin = extract_best_ctr_entry_with_margin(ctr_entries)
         self.assertEqual(best_ctr_entry, self.high_ctr)
-        self.assertAlmostEqual(margin, self.high_ctr.ctr - self.mid_ctr.ctr)
+        self.assertAlmostEqual(
+            margin, calculate_ctr_margin(self.high_ctr, self.mid_ctr)
+        )
