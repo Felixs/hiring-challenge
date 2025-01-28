@@ -1,21 +1,27 @@
 # for local testing
 
 services:
+
+  postgresql-db:
+    image: postgres:17.2
+    # TODO move to .env file
+    environment:
+      - "POSTGRES_PASSWORD=test123"
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_DB=ctrchallenge"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d/
+
   ab-test-lambda:
-    build: .
+    build: ./lambda
+    depends_on: 
+      - postgresql-db
     ports:
       - "8080:8080"
 
   service-curl:
-    image: curlimages/curl:latest
+    build: ./curl-service
     depends_on:
       - ab-test-lambda
-    entrypoint: [ "sh", "-c" ]
-    volumes:
-       - ./sample-requests:/data
-    command:
-      - |
-        echo "Sending test events...";
-        curl -X POST -d "@/data/request1.json" --url http://ab-test-lambda:8080/2015-03-31/functions/function/invocations -H "Content-Type: application/json"
-        curl -X POST -d "@/data/request2.json" --url http://ab-test-lambda:8080/2015-03-31/functions/function/invocations -H "Content-Type: application/json"
-        curl -X POST -d "@/data/request3.json" --url http://ab-test-lambda:8080/2015-03-31/functions/function/invocations -H "Content-Type: application/json"

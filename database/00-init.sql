@@ -1,0 +1,2 @@
+-- use database
+\c ctrchallenge;
