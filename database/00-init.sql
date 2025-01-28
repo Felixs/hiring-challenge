@@ -8,10 +8,10 @@ CREATE TABLE IF NOT EXISTS ctr (
     test_id VARCHAR(128) NOT NULL,
     content_id VARCHAR(32) NOT NULL,
     winner_id INT NOT NULL,
-    ctr FLOAT NOT NULL,
-    margin FLOAT NOT NULL,
+    ctr_percent FLOAT NOT NULL,
+    margin_percent FLOAT NOT NULL,
     processed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (test_id, processed_at) -- for testing added processed_at to primary key
+    PRIMARY KEY (test_id, processed_at)
 );
 -- set optional set additional indices to speed search queries
 -- CREATE INDEX idx_content_id ON ctr (content_id);
@@ -24,11 +24,11 @@ CREATE VIEW ctr_winners AS (
         test_id,
         content_id,
         winner_id,
-        ctr,
-        margin,
+        ctr_percent,
+        margin_percent,
         processed_at
     FROM
         ctr
     WHERE 
-        margin >= 0.2
+        margin_percent >= 20.0
 );

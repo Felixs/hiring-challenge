@@ -22,7 +22,7 @@ connection = psycopg2.connect(
 
 def write_to_database(ctr_entry: CtrEntry, margin: float) -> None:
     logger.info(f"Winner: {ctr_entry} with margin of {margin:.4f}")
-    sql_string = "INSERT INTO ctr (test_id, content_id, winner_id, ctr, margin) values(%s, %s, %s, %s, %s);"
+    sql_string = "INSERT INTO ctr (test_id, content_id, winner_id, ctr_percent, margin_percent) values(%s, %s, %s, %s, %s);"
     with connection.cursor() as cur:
         cur.execute(
             sql_string,
