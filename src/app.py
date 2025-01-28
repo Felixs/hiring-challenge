@@ -8,11 +8,10 @@ import psycopg2
 from src.ctr_entry import (
     CtrEntry,
     extract_best_ctr_entry_with_margin,
-    extract_ctr_entries,
+    parse_ctr_entries,
 )
 from src.definitions import logger
 
-# TODO: read connection secret
 connection = psycopg2.connect(
     user=os.environ.get("DATABASE_USER", "postgres"),
     password=os.environ.get("DATABASE_PASSWORD", ""),
@@ -23,6 +22,12 @@ connection = psycopg2.connect(
 
 
 def write_to_database(ctr_entry: CtrEntry, margin: float) -> None:
+    """Writes ctr and magin data to database
+
+    Args:
+        ctr_entry (CtrEntry): best performing ctr entry
+        margin (float): margin by which it performed better than the others
+    """
     sql_string = "INSERT INTO ctr (test_id, content_id, winner_id, ctr_percent, margin_percent) values(%s, %s, %s, %s, %s);"
     with connection.cursor() as cur:
         cur.execute(
@@ -43,7 +48,7 @@ def lambda_handler(event, context):
     try:
         # TODO: what about multiple reconds in one event?
         sns_message = json.loads(event["Records"][0]["Sns"]["Message"])
-        ctr_entries = extract_ctr_entries(sns_message)
+        ctr_entries = parse_ctr_entries(sns_message)
         best_ctr_entry, winning_margin = extract_best_ctr_entry_with_margin(ctr_entries)
         write_to_database(best_ctr_entry, winning_margin)
 
