@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS ctr (
     ctr FLOAT NOT NULL,
     margin FLOAT NOT NULL,
     processed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (test_id)
+    PRIMARY KEY (test_id, processed_at) -- for testing added processed_at to primary key
 );
 -- set optional set additional indices to speed search queries
 -- CREATE INDEX idx_content_id ON ctr (content_id);

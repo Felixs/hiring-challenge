@@ -2,6 +2,8 @@
 import json
 import logging
 
+import psycopg2
+
 from src.ctr_entry import (
     CtrEntry,
     extract_best_ctr_entry_with_margin,
@@ -9,9 +11,30 @@ from src.ctr_entry import (
 )
 from src.definitions import logger
 
+connection = psycopg2.connect(
+    user="postgres",
+    password="test123",
+    host="postgresql-db",
+    database="ctrchallenge",
+    port=5432,
+)
+
 
 def write_to_database(ctr_entry: CtrEntry, margin: float) -> None:
     logger.info(f"Winner: {ctr_entry} with margin of {margin:.4f}")
+    sql_string = "INSERT INTO ctr (test_id, content_id, winner_id, ctr, margin) values(%s, %s, %s, %s, %s);"
+    with connection.cursor() as cur:
+        cur.execute(
+            sql_string,
+            (
+                ctr_entry.test_id,
+                ctr_entry.content_id,
+                ctr_entry.child_id,
+                ctr_entry.ctr,
+                margin,
+            ),
+        )
+        connection.commit()
 
 
 def lambda_handler(event, context):
