@@ -7,6 +7,7 @@ from src.ctr_entry import (
     calculate_ctr_margin,
     extract_best_ctr_entry_with_margin,
 )
+from src.definitions import logger
 from src.errors import EmptyMessageException
 
 
@@ -15,6 +16,8 @@ class TestCtrEntry(unittest.TestCase):
         self.high_ctr = CtrEntry(views=100, clicks=90)
         self.mid_ctr = CtrEntry(views=100, clicks=20)
         self.low_ctr = CtrEntry(views=100, clicks=1)
+        # disabeling logger output for testcases
+        logger.disabled = True
         return super().setUp()
 
     @parameterized.expand(
