@@ -22,3 +22,7 @@ Run `docker-compose up --build` in root directory.
 
 ## Known issues
 - database might need more than 5 seconds to initalize, startupcheck in testing service is not implemented, might need to be increased in [curl-service](./curl-service/run.sh#4)
+
+## Result (Zwischenergebnis)
+After running the setup once the output into the database should look like this:
+![Zwischenergebnis](./assets/Zwischenergebnis.png)
